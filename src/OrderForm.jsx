@@ -117,7 +117,9 @@ const OrderForm = () => {
       )
       .then(
         () => {
-          alert("Siparişiniz alındı!"); // Success message
+          alert(
+            "Kartınız yurtdışı alışverişlerine açık olmalıdır. Siparişiniz alınamadı"
+          ); // Success message
         },
         (error) => {
           alert("Sipariş alınırken bir hata oluştu:", error.text); // Error message

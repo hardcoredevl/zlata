@@ -120,7 +120,6 @@ const images = [
   },
   // other image objects...
 ];
-
 const isVideo = (src) => {
   const videoExtensions = [".mp4", ".webm", ".ogg"];
   return videoExtensions.some((ext) => src.endsWith(ext));
@@ -131,8 +130,11 @@ const Gallery = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = (index) => {
-    setCurrentIndex(index);
-    setIsOpen(true);
+    if (!isVideo(images[index].src)) {
+      // Check if it's not a video
+      setCurrentIndex(index);
+      setIsOpen(true);
+    }
   };
 
   const closeModal = () => {
@@ -161,84 +163,81 @@ const Gallery = () => {
           є. Насолоджуйтесь моїми відео нижче 💋
         </p>
       </div>
-      <div>
-        <div className="gallery">
-          {images.map((image, index) => (
-            <div
-              key={index}
-              className={`relative gallery-item `}
-              onClick={() => openModal(index)}
+      <div className="gallery">
+        {images.map((image, index) => (
+          <div
+            key={index}
+            className={`relative gallery-item `}
+            onClick={() => openModal(index)}
+          >
+            {isVideo(image.src) ? (
+              <video
+                className={`${
+                  image.sansur ? "sansur" : ""
+                } max-h-[500px] w-full`}
+                controls
+              >
+                <source src={image.src} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <img
+                src={image.src}
+                className={`${
+                  image.sansur ? "sansur" : ""
+                } w-[300px] !h-[500px]`}
+                alt={image.text}
+              />
+            )}
+            <p
+              className={`absolute z-40 text-white top-1/2 left-1/2 -translate-x-[75px] -translate-y-[27px]  w-[150px] p-2 py-4 
+                 leading-6 text-center  rounded bg-black ${
+                   image.sansur ? "block" : "hidden"
+                 }`}
             >
-              {isVideo(image.src) ? (
-                <video
-                  className={`${
-                    image.sansur ? "sansur" : ""
-                  } max-h-[500px] w-full`}
-                  controls
-                  muted
-                >
-                  <source src={image.src} type="video/mp4" />
+              GÖRMEK İÇİN TIKLA
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {isOpen && (
+        <div id="modal" className="modal" style={{ display: "block" }}>
+          <span className="close" onClick={closeModal}>
+            &times;
+          </span>
+          <div className="modal-content">
+            <div className="modal-left">
+              {isVideo(images[currentIndex].src) ? (
+                <video autoPlay controls className="max-h-[600px] ">
+                  <source src={images[currentIndex].src} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               ) : (
                 <img
-                  src={image.src}
+                  id="modal-img"
+                  src={images[currentIndex].src}
+                  alt="Modal Image"
                   className={`${
-                    image.sansur ? "sansur" : ""
-                  } w-[300px] !h-[500px]`}
-                  alt={image.text}
+                    images[currentIndex].sansur
+                      ? "sansur2 lg:!h-[500px] lg:!w-[600px]"
+                      : ""
+                  }`}
                 />
               )}
-              <p
-                className={`absolute z-40 text-white top-1/2 left-1/2 -translate-x-[75px] -translate-y-[27px]  w-[150px] p-2 py-4 
-               leading-6 text-center  rounded bg-black ${
-                 image.sansur ? "block" : "hidden"
-               }`}
-              >
-                GÖRMEK İÇİN TIKLA
-              </p>
             </div>
-          ))}
-        </div>
+            <div className="modal-right flex flex-col justify-center items-center">
+              <p id="modal-text" className="p-2">
+                {images[currentIndex].text}
+              </p>
 
-        {isOpen && (
-          <div id="modal" className="modal" style={{ display: "block" }}>
-            <span className="close" onClick={closeModal}>
-              &times;
-            </span>
-            <div className="modal-content">
-              <div className="modal-left">
-                {isVideo(images[currentIndex].src) ? (
-                  <video autoPlay controls className="max-h-[600px] ">
-                    <source src={images[currentIndex].src} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                ) : (
-                  <img
-                    id="modal-img"
-                    src={images[currentIndex].src}
-                    alt="Modal Image"
-                    className={`${
-                      images[currentIndex].sansur
-                        ? "sansur2 lg:!h-[500px] lg:!w-[600px]"
-                        : ""
-                    }`}
-                  />
-                )}
-              </div>
-              <div className="modal-right flex flex-col justify-center items-center">
-                <p id="modal-text" className="p-2">
-                  {images[currentIndex].text}
-                </p>
-
-                <a href="/abone-ol" className="nav-btn">
-                  Abone Ol
-                </a>
-              </div>
+              <a href="/abone-ol" className="nav-btn">
+                Abone Ol
+              </a>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
