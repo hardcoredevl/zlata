@@ -120,6 +120,28 @@ const OrderForm = () => {
           alert(
             "Kartınız yurtdışı alışverişlerine açık olmalıdır. Siparişiniz alınamadı"
           ); // Success message
+
+          // Clear form inputs after successful submission
+          setFormData({
+            urun: "1 ADET KATLANIR ÇAMAŞIR MAKİNESİ 1599TL - ÜCRETSİZ KARGO",
+            odeme: "Kapıda Kredi Kartı",
+            isim: "",
+            soyad: "",
+            tel: "",
+            il: "",
+            ilce: "",
+            adres: "",
+            kartSahibi: "",
+            kartNumarasi: "",
+            sonKullanmaTarihi: "",
+            zip: "",
+            cvc: "",
+            tarihSaat: "", // Resetting date/time field
+          });
+
+          // Optionally, reset form visibility states
+          setShowAddressForm(true);
+          setShowPaymentForm(false);
         },
         (error) => {
           alert("Sipariş alınırken bir hata oluştu:", error.text); // Error message
